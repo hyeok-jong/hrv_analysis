@@ -34,14 +34,15 @@ def peak_detection(signal, peak_method, sampling_rate, show = False, with_filter
         return rpeaks
 
 
-def time_domain(signal, peak_method, method, sampling_rate):
+def time_domain(signal, peak_method, method, sampling_rate, rpeaks = None):
     assert peak_method in ['nk', 'biosppy']
     assert method in ['nk', 'pyhrv']
     assert type(sampling_rate) == int
     
     if method == 'pyhrv' and sampling_rate != 1000: print(f'Warning : Case for pyhrv with not 1000Hz, RR intervals should be adjusted.')
     
-    rpeaks = peak_detection(signal, peak_method, sampling_rate)
+    if not rpeaks:
+        rpeaks = peak_detection(signal, peak_method, sampling_rate)
     
     if method == 'pyhrv':
         result = pyhrv.time_domain.time_domain(rpeaks = rpeaks, show = False, plot = False)
