@@ -2,6 +2,10 @@ import numpy as np
 import biosppy
 import neurokit2 as nk
 
+'''
+Note that, R-peaks alone have no information about the sampling_rate
+'''
+
 def biosppy_filter(signal, sampling_rate):
     signal = np.array(signal)
     sampling_rate = float(sampling_rate)
@@ -42,7 +46,7 @@ def biosppy_rpeaks(filtered, sampling_rate):
 def biosppy_processing(signal, sampling_rate):
     filtered = biosppy_filter(signal, sampling_rate)['filtered']
     rpeaks = biosppy_rpeaks(filtered, sampling_rate)['rpeaks']
-    return {'filtered' : filtered, 'rpeaks' : rpeaks}
+    return {'filtered' : filtered, 'rpeaks' : np.array(rpeaks)}
 
 
 def nk_filter(signal, sampling_rate):
@@ -67,6 +71,20 @@ def nk_processing(signal, sampling_rate):
     filtered = nk_filter(signal, sampling_rate)['filtered']
     rpeaks = nk_rpeaks(signal, sampling_rate)['rpeaks']
     return {'filtered' : filtered, 'rpeaks' : np.array(rpeaks)}
+    
+    
+def processing_aggregate(signal, sampling_rate):
+    nk_result = nk_processing(signal, sampling_rate)
+    biosppy_result = biosppy_processing(signal, sampling_rate)
+    if nk_result['rpeaks'][0] - biosppy_result['rpeaks'][0] > sampling_rate // 4 :
+        rpeaks = [biosppy_result['rpeaks'][0]] + list(nk_result['rpeaks'])
+    else: rpeaks = nk_result['rpeaks']
+    return {
+        'rpeaks' : np.array(rpeaks),
+        'nk filtered' : nk_result['filtered'],
+        'biosppy filtered' : biosppy_result['filtered'],
+    }
+    
     
 
 

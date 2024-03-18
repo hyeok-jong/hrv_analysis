@@ -16,7 +16,7 @@ def biosppy_hr(rpeaks, sampling_rate):
 
 def pyhrv_hr(rpeaks, sampling_rate):
     # https://github.com/PGomes92/pyhrv/blob/73ea446ecf7d3416fef86fc4025ddcc242398e3f/pyhrv/time_domain.py#L311
-    rpeaks =correct_rpeaks_pyhrv(rpeaks, sampling_rate)
+    rpeaks = correct_rpeaks_pyhrv(rpeaks, sampling_rate)
     nn = pyhrv.utils.check_input(nni = None, rpeaks = rpeaks)
     hr = pyhrv.tools.heart_rate(nn)
     return {'hr' : hr.mean()}
