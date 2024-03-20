@@ -61,13 +61,17 @@ def nk_time(rpeaks, sampling_rate):
         'nk sdnn' : float(out['HRV_SDNN'])
     }
     
+def nk_hr(rpeaks, sampling_rate):
+    return nk.signal_rate(rpeaks, sampling_rate).mean()
+    
 def time(rpeaks, sampling_rate):
     result = dict()
     result.update(pyhrv_time(rpeaks, sampling_rate))
     result.update(nk_time(rpeaks, sampling_rate))
     result.update({
-        'biosspy hr' : biosppy_hr(rpeaks, sampling_rate)['hr'].mean()
+        'biosppy hr' : biosppy_hr(rpeaks, sampling_rate)['hr'].mean()
     })
+    result['nk hr'] = nk_hr(rpeaks, sampling_rate)
     return result
 
 

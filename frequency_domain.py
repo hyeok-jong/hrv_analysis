@@ -12,7 +12,9 @@ def pyhrv_welch(rpeaks, sampling_rate, show = False):
 def pyhrv_ar(rpeaks, sampling_rate, show = False):
     rpeaks = correct_rpeaks_pyhrv(rpeaks, sampling_rate)
     result = pyhrv.frequency_domain.ar_psd(rpeaks = rpeaks, show = False, mode = 'dev' if show == False else 'normal')
-    return dict(result[0])
+    result = dict(result[0])
+    result['ar_ratio'] = 1/result['ar_ratio']
+    return result
 
 
 def pyhrv_frequency(rpeaks, sampling_rate, show = False):
